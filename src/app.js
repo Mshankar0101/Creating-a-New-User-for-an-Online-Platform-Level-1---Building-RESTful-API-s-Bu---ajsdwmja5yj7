@@ -1,5 +1,6 @@
 const fs = require("fs");
 const express = require("express");
+const { error } = require("console");
 const app = express();
 
 // Importing products from products.json file
@@ -11,6 +12,25 @@ const userDetails = JSON.parse(
 app.use(express.json());
 
 // Write POST endpoint for registering new user
+app.post("/api/v1/details",(req,res)=>{
+   const {name, mail, number} = req.body;
+   const id = userDetails.length;
+   if(name &&  mail  && number){
+      const newProduct = {
+         "id": parseInt(id)+ 1,
+         "name": name,
+         "mail": mail,
+         "number": number
+      }
+      userDetails.push(newProduct);
+      fs.writeFileSync(`${__dirname}/data/userDetails.json`,JSON.stringify(userDetails),(error)=>{
+        console.log("error in write file",error);
+      });
+     return res.status(201).send({"status": "Success","message": "User registered successfully", "data": newProduct});
+   }
+   return res.status(404).send({"error" :"please enter name, mail and number feild correctly"});
+
+})
 
 // GET endpoint for sending the details of users
 app.get("/api/v1/details", (req, res) => {
