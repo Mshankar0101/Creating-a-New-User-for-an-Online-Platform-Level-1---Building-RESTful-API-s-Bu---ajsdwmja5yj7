@@ -33,25 +33,17 @@ app.use(express.json());
 // })
 
 app.post("/api/v1/details", (req, res) => {
-
   const { name, mail, number } = req.body;
-  
   if (!name || !mail || !number) {
-  
   return res.status(400).send({"error": "Please enter name, mail, and number fields correctly"});
-  
   }
   
-  const newId = userDetails[userDetails.length - 1].id + 1;
-  
-  const newProduct = { id: newId, name, mail, number };
-  
-  userDetails.push(newProduct);
-  
-  fs.writeFileSync(`${__dirname}/data/userDetails.json`, JSON.stringify(userDetails));
-  
-  return res.status(201).send({"status": "Success", "message": "User registered successfully", "data": { newProduct }});
-
+  const newId = userDetails.length>0? userDetails[userDetails.length - 1].id + 1 : 1; 
+  // const newProduct = { id: newId, name, mail, number };
+  const newUser = { id: newId, name, mail, number };
+  userDetails.push(newUser);
+  fs.writeFileSync(`${__dirname}/data/userDetails.json`, JSON.stringify(userDetails, null, 2));
+  return res.status(201).send({status : "Success", message: "User registered successfully", data: {newProduct : newUser}});
   });
 
 // GET endpoint for sending the details of users
