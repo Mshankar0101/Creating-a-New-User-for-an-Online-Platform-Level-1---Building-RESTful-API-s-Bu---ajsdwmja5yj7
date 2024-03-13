@@ -28,7 +28,7 @@ app.post("/api/v1/details",(req,res)=>{
       });
      return res.status(201).send({"status": "Success","message": "User registered successfully", "data": newProduct});
    }
-   return res.status(404).send({"error" :"please enter name, mail and number feild correctly"});
+   return res.status(400).send({"error" :"please enter name, mail and number feild correctly"});
 
 })
 
