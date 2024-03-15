@@ -12,32 +12,23 @@ const userDetails = JSON.parse(
 app.use(express.json());
 
 // Write POST endpoint for registering new user
-app.post("/api/v1/details", (req, res) => {
-    const { name, mail, number } = req.body;
-    const id = userDetails.length;
-    if (name && mail && number) {
-        const newProduct = {
-            "id": parseInt(id) + 1,
-            "name": name,
-            "mail": mail,
-            "number": number
-        };
-        userDetails.push(newProduct);
-        try {
-            fs.writeFileSync(`${__dirname}/data/userDetails.json`, JSON.stringify(userDetails, null, 2));
-            return res.status(201).send({
-                "status": "Success",
-                "message": "User registered successfully",
-                "data": { newProduct }
-            });
-        } catch (error) {
-            console.error("Error writing to file", error);
-         return res.status(500).send({ "error": "An error occurred while saving user data." });
-        }
-    } else {
-        return res.status(400).send({ "error": "Please enter name, mail, and number fields correctly" });
-    }
-});
+app.post("/api/v1/details",(req,res)=>{
+   const {name, mail, number} = req.body;
+   const id = userDetails.length;
+      const newProduct = {
+         "id": id + 1,
+          name,
+          mail,
+         number
+      }
+      userDetails.push(newProduct);
+      fs.writeFileSync(`${__dirname}/data/userDetails.json`,JSON.stringify(userDetails),(error)=>{
+        console.log("error in write file",error);
+      });
+     return res.status(201).send({"status": "Success","message": "User registered successfully", "data": newProduct});
+   
+  
+})
 
 
 
